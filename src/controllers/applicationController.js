@@ -3,6 +3,8 @@ const redis = require('../config/redis-config');
 // Generate a unique ID for each application
 const { v4: uuidv4 } = require('uuid');
 const validator = require('validator');
+const { applicationStatus } = require('../model/applicationModel');
+
 
 exports.createApplication = async (req, res) => {
   try {
@@ -33,6 +35,8 @@ exports.createApplication = async (req, res) => {
 
     const id = uuidv4();
 
+    const {PENDING}= applicationStatus;
+
     const applicationData = {
       id,
       purpose,
@@ -47,6 +51,7 @@ exports.createApplication = async (req, res) => {
       passportNumber,
       applicantName,
       email,
+      PENDING
     };
 
     // Store application data in Redis
@@ -58,6 +63,21 @@ exports.createApplication = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+exports.updateStatus=async(req,res)=>{
+  try{
+    const {id,status}=req.body; 
+
+    let applicationData = await redis.get(id);
+    if(applicationData && status){
+      await redis.set({...applicationData,status});
+    }
+  }catch(error){
+    res.status(500).json({error:'Unable to update status'})
+  }
+
+}
 
 exports.getApplication = async (req, res) => {
   try {
@@ -76,3 +96,4 @@ exports.getApplication = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+

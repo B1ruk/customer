@@ -1,13 +1,8 @@
-// const redis = require('redis');
-// const { promisify } = require('util');
-
-// const client = redis.createClient();
-
-// client.on('error', (err) => {
-//   console.error('Redis error:', err);
-// });
-
-// const setAsync = promisify(client.set).bind(client);
-// const getAsync = promisify(client.get).bind(client);
-
-// module.exports = { setAsync, getAsync };
+exports.applicationStatus = {
+    PENDING:"pending",
+    APPROVED: "approved",
+    REJECTED: "rejected",
+    PROCESSING_ACCEPTED: "processing_accepted",
+    PROCESSING_rejected: "processing_rejected",
+  };
+  

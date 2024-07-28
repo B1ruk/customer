@@ -8,4 +8,7 @@ router.post('/', applicationController.createApplication);
 // Route to get an application by ID
 router.get('/:id', applicationController.getApplication);
 
+// Route to update the application stat
+router.put('/',applicationController.updateStatus);
+
 module.exports = router;
