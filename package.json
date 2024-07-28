@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,12 @@
     "nodemailer": "^6.9.14",
     "nodemon": "^1.1.2",
     "redis": "^4.6.15",
+    "save-dev": "^0.0.1-security",
     "uuid": "^10.0.0",
     "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }
