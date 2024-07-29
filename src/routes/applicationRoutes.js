@@ -6,9 +6,12 @@ const applicationController = require('../controllers/applicationController');
 router.post('/', applicationController.createApplication);
 
 // Route to get an application by ID
-router.get('/:id', applicationController.getApplication);
+router.get('/onboarding/:id', applicationController.getApplication);
 
 // Route to update the application stat
 router.put('/',applicationController.updateStatus);
+
+//Route to get all applications
+router.get('/onboardings',applicationController.getApplications);
 
 module.exports = router;
