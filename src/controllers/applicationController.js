@@ -4,6 +4,7 @@ const redis = require('../config/redis-config');
 const {v4: uuidv4} = require('uuid');
 const validator = require('validator');
 const {applicationStatus} = require('../model/applicationModel');
+const {loadOnboardings, currentUserRole} = require("../service/onboarding-service");
 
 
 exports.createApplication = async (req, res) => {
@@ -35,8 +36,6 @@ exports.createApplication = async (req, res) => {
 
         const id = uuidv4();
 
-        const {PENDING} = applicationStatus;
-
         const applicationData = {
             id,
             purpose,
@@ -51,7 +50,7 @@ exports.createApplication = async (req, res) => {
             passportNumber,
             applicantName,
             email,
-            PENDING
+            status:applicationStatus.PENDING
         };
 
         // Store application data in Redis
@@ -71,7 +70,7 @@ exports.updateStatus = async (req, res) => {
 
         let applicationData = await redis.get(id);
         if (applicationData && status) {
-            const data = await redis.set({...applicationData, status});
+            const data = await redis.set({...applicationData, status:status});
             res.status(200).json(JSON.parse(data))
         }
     } catch (error) {
@@ -100,15 +99,8 @@ exports.getApplication = async (req, res) => {
 
 exports.getApplications = async (req, res) => {
     try {
-        console.log(req);
-        const keys = await redis.keys('*');
-        let applicationDatas=[];
-
-        for (let i=0;i<keys.length;i++){
-            const applicationData = await redis.get(keys[i]);
-            applicationDatas.push(JSON.parse(applicationData));
-        }
-
+        const role=await currentUserRole(req);
+        const applicationDatas=await loadOnboardings(role);
         res.json(applicationDatas);
     } catch (error) {
         console.log(error);
